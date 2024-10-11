@@ -1,14 +1,9 @@
 import logo from "./logo.svg";
 import "./App.css";
+import Routes from "./Routes";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <a> Welcome to our CS222 project</a>
-      </header>
-    </div>
-  );
+  return <Routes />;
 }
 
 export default App;

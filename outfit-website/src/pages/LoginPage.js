@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { Form, Image, Button } from 'react-bootstrap';
 import AuthContext from '../context/AuthContext';
 
-
 export const LoginPage = () => {
   // let {loginuser} = useContext(AuthContext)
     return (
