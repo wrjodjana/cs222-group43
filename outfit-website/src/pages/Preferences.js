@@ -5,18 +5,18 @@ import AuthContext from '../context/AuthContext';
 import Select from 'react-select'
 
 const options = [
-  { value: 'cotton', label: 'Cotton' },
-  { value: 'linen', label: 'Linen' },
-  { value: 'polyester', label: 'Polyester' },
-  { value: 'wool', label: 'Wool' },
-  { value: 'nylon', label: 'Nylon' },
-  { value: 'denim', label: 'Denim' },
-  { value: 'jersey', label: 'Jersey' }
+    { value: 'cotton', label: 'Cotton' },
+    { value: 'linen', label: 'Linen' },
+    { value: 'polyester', label: 'Polyester' },
+    { value: 'wool', label: 'Wool' },
+    { value: 'nylon', label: 'Nylon' },
+    { value: 'denim', label: 'Denim' },
+    { value: 'jersey', label: 'Jersey' }
 ]
 
-const MyComponent = () => (
-  <Select options={options} />
-)
+// const MyComponent = () => (
+//   <Select options={options} />
+// )
 
 export const Preferences = () => {
     return (
