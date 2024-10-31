@@ -11,8 +11,25 @@ export const WeatherPage = () => {
   });
 
   const [place, setPlace] = useState(null);
+  const [weather, setWeather] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const inputRef = useRef(null);
   const autocompleteRef = useRef(null);
+
+  const fetchWeather = async (lat, lon) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${process.env.REACT_APP_OPENWEATHER_API_KEY}`);
+      const data = await response.json();
+      setWeather(data);
+    } catch (err) {
+      setError("Failed to fetch weather data. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (isLoaded && inputRef.current) {
@@ -24,17 +41,11 @@ export const WeatherPage = () => {
       autocompleteRef.current.addListener("place_changed", () => {
         const selectedPlace = autocompleteRef.current.getPlace();
         setPlace(selectedPlace);
-        let city = "";
-        let country = "";
-
-        selectedPlace.address_components.forEach((component) => {
-          if (component.types.includes("locality")) {
-            city = component.long_name;
-          }
-          if (component.types.includes("country")) {
-            country = component.long_name;
-          }
-        });
+        if (selectedPlace.geometry) {
+          const lat = selectedPlace.geometry.location.lat();
+          const lon = selectedPlace.geometry.location.lng();
+          fetchWeather(lat, lon);
+        }
       });
     }
   }, [isLoaded]);
@@ -76,6 +87,19 @@ export const WeatherPage = () => {
     <div style={divStyle}>
       <p style={textStyle}>Search your location!</p>
       <input ref={inputRef} style={inputStyle} type="text" placeholder="Search for a city" />
+
+      {loading && (
+        <div style={resultStyle}>
+          <p>Loading weather data...</p>
+        </div>
+      )}
+
+      {error && (
+        <div style={resultStyle}>
+          <p style={{ color: "#ff0000" }}>{error}</p>
+        </div>
+      )}
+
       {place && (
         <div style={resultStyle}>
           <h3 style={{ marginBottom: "10px", fontSize: "18px" }}>Selected Location:</h3>
@@ -83,8 +107,16 @@ export const WeatherPage = () => {
           <p style={{ fontSize: "14px", color: "#666", marginTop: "5px" }}>
             Coordinates: {place.geometry?.location.lat().toFixed(4)}, {place.geometry?.location.lng().toFixed(4)}
           </p>
+          {weather && weather.main && (
+            <div style={{ marginTop: "15px", borderTop: "1px solid #ddd", paddingTop: "15px" }}>
+              <p>Temperature: {Math.round(weather.main.temp)}°C</p>
+              {weather.weather && weather.weather[0] && <p>Conditions: {weather.weather[0].description}</p>}
+            </div>
+          )}
         </div>
       )}
     </div>
   );
 };
+
+export default WeatherPage;
