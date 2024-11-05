@@ -1,4 +1,6 @@
 import React, { useContext } from 'react';
+import { useState } from 'react';
+
 import { Form, Image, Button } from 'react-bootstrap';
 import AuthContext from '../context/AuthContext';
 // import React from 'react'
@@ -56,22 +58,54 @@ export const Preferences = () => {
         fontSize: "18px",
     };
 
+    const [materialsSelected, setMaterialsSelected] = useState([]);
+
+    const handleMaterialsChange = (selectedOptions) => {
+        setMaterialsSelected(selectedOptions);
+    };
+
+    const storepreferences = (event) => {
+        event.preventDefault();
+        let form = event.target;
+        let formData = new FormData(form);
+        let formDataObj = Object.fromEntries(formData.entries());
+        formDataObj.materials = materialsSelected.map(option => option.value);
+        let formJSON = JSON.stringify(formDataObj);
+        // console.log(formDataObj);
+        console.log(formJSON);
+
+        // event.preventDefault();
+        // // console.log(event.target)
+        // let form = event.target;
+        // var value = [];
+        // for (var i = 0, l = options.length; i < l; i++) {
+        //     if (options[i].selected) {
+        //         value.push(options[i].value);
+        //     }
+        // }
+        // let formData = new FormData(form);
+        // let formDataObj = Object.fromEntries(formData.entries());
+        // let formJSON = JSON.stringify(formDataObj)
+        // console.log(formDataObj)
+        // console.log(formJSON)
+    }
+
     return (
         <div style={divStyle} className='user preferences'>
             <section id="section">
                 <h1 style={h1style}> Preferences </h1>
-                <Form onSubmit/*={storepreferences}*/>
-                    <Form.Label style={textStyle} className ="title" for="location"> Location </Form.Label> 
+                <Form onSubmit={storepreferences}>
+                    {/* <Form.Label style={textStyle} className ="title" for="location"> Location </Form.Label> 
                     <br/>
                     <Form.Control style={inputStyle} type="location" name="location"/>
-                    <br/>
+                    <br/> */}
                     <Form.Label style={textStyle} className ="title" for="materials"> Materials </Form.Label> 
                     <br/>
-                    <Select style={inputStyle} isMulti name="colors" options={options} className="basic-multi-select" classNamePrefix="select"/>
+                    <Select style={inputStyle} isMulti name="materials" options={options} className="basic-multi-select" classNamePrefix="select" onChange={handleMaterialsChange}/>
                     <br/>
-                    <Form.Label style={textStyle} className ="title" for="temperature">Ideal Temperature</Form.Label> 
+                    <Form.Label style={textStyle} className ="title" for="controls">Ideal Conditions</Form.Label> 
                     <br/>
-                    <Form.Control style={inputStyle} type="temperature" name="temperature"/>
+                    <Form.Control style={inputStyle} keyboardType="numeric" type="controls" name="temperature"/>
                     <br/>
                     <Button style={buttonStyle} type="submit">submit</Button>
                 </Form>
