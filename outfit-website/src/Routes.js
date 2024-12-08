@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { LoginPage } from "./pages/LoginPage";
 import { Preferences } from "./pages/Preferences";
-import { WeatherPage } from "./pages/WeatherPage";
+import WeatherPage from "./pages/WeatherPage";
 import { OutfitsPage } from "./pages/OutfitsPage";
 
 function AppRoutes() {
