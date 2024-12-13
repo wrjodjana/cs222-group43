@@ -6,3 +6,4 @@ What is the Weather Buddy? Weather Buddy is an intelligent weather app designed 
 For more details, view our full project proposal [here](https://docs.google.com/document/d/1QSspehLaoicjNbfgZ6cozxHUNR-O9wktdUzAv7SCzaA/edit?usp=sharing).
 
 ## Technical Architecture 
+![Weather Buddy Technical Architecture](https://drive.google.com/file/d/1mHiyLcpBA4_nX85qkRl9Qzp7uqbw0OCH/view?usp=drive_link)
