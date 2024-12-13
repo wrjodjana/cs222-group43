@@ -12,6 +12,133 @@ const materialOptions = [
   { value: "jersey", label: "Jersey" },
 ];
 
+const DEMO_SUGGESTIONS = {
+  hot: {
+    cotton: {
+      tops: [
+        {
+          name: "Breathable Cotton T-Shirt",
+          material: "cotton",
+          description: "Light and airy crew neck t-shirt perfect for warm weather",
+          benefits: "Moisture-wicking, breathable, and comfortable against skin",
+        },
+        {
+          name: "Cotton Tank Top",
+          material: "cotton",
+          description: "Sleeveless athletic-style top with relaxed fit",
+          benefits: "Maximum ventilation, perfect for high temperatures",
+        },
+      ],
+      bottoms: [
+        {
+          name: "Cotton Shorts",
+          material: "cotton",
+          description: "Classic-fit shorts hitting just above the knee",
+          benefits: "Breathable cotton blend, perfect for casual summer wear",
+        },
+      ],
+    },
+    linen: {
+      tops: [
+        {
+          name: "Linen Button-Up Shirt",
+          material: "linen",
+          description: "Loose-fitting casual shirt with rolled-up sleeves",
+          benefits: "Excellent airflow, quick-drying, becomes softer with each wash",
+        },
+      ],
+      bottoms: [
+        {
+          name: "Linen Beach Pants",
+          material: "linen",
+          description: "Relaxed-fit pants with elastic waistband",
+          benefits: "Ultra-breathable, perfect for hot and humid conditions",
+        },
+      ],
+    },
+    polyester: {
+      tops: [
+        {
+          name: "Sport Performance Tee",
+          material: "polyester",
+          description: "Athletic fit moisture-wicking t-shirt",
+          benefits: "Quick-drying, odor-resistant, perfect for active wear",
+        },
+      ],
+      bottoms: [
+        {
+          name: "Athletic Shorts",
+          material: "polyester",
+          description: "Lightweight training shorts with built-in liner",
+          benefits: "Moisture-wicking, quick-drying, maximum mobility",
+        },
+      ],
+    },
+  },
+  cold: {
+    wool: {
+      tops: [
+        {
+          name: "Merino Wool Sweater",
+          material: "wool",
+          description: "Medium-weight pullover sweater",
+          benefits: "Naturally temperature-regulating, moisture-wicking, and odor-resistant",
+        },
+      ],
+      bottoms: [
+        {
+          name: "Wool Blend Trousers",
+          material: "wool",
+          description: "Tailored-fit pants with subtle texture",
+          benefits: "Warm, durable, and naturally wrinkle-resistant",
+        },
+      ],
+    },
+    cotton: {
+      tops: [
+        {
+          name: "Thermal Henley",
+          material: "cotton",
+          description: "Long-sleeve layering piece with button placket",
+          benefits: "Warm but breathable, great for layering",
+        },
+        {
+          name: "Heavy Cotton Sweatshirt",
+          material: "cotton",
+          description: "Thick cotton blend crew neck sweatshirt",
+          benefits: "Cozy warmth, soft interior, durable exterior",
+        },
+      ],
+      bottoms: [
+        {
+          name: "Cotton Fleece Joggers",
+          material: "cotton",
+          description: "Tapered-fit sweatpants with fleece lining",
+          benefits: "Comfortable fit, warm fleece interior",
+        },
+      ],
+    },
+    denim: {
+      tops: [
+        {
+          name: "Denim Jacket",
+          material: "denim",
+          description: "Classic-fit jean jacket with button closure",
+          benefits: "Durable, wind-resistant, perfect for layering",
+        },
+      ],
+      bottoms: [
+        {
+          name: "Fleece-Lined Jeans",
+          material: "denim",
+          description: "Classic straight-leg jeans with warm lining",
+          benefits: "Added warmth without bulk, maintains denim durability",
+        },
+      ],
+    },
+  },
+};
+
 const WeatherPage = () => {
   const [materialsSelected, setMaterialsSelected] = useState([]);
   const [place, setPlace] = useState(null);
@@ -19,6 +146,7 @@ const WeatherPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [temperature, setTemperature] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   const inputRef = useRef(null);
   const autocompleteRef = useRef(null);
@@ -89,11 +217,91 @@ const WeatherPage = () => {
 
     try {
       localStorage.setItem("preferences", JSON.stringify(formData));
+      setShowSuggestions(true);
       alert("Preferences saved successfully!");
     } catch (error) {
       console.error("Error saving to localStorage:", error);
       alert("Failed to save preferences");
     }
+  };
+
+  const getClothingSuggestions = () => {
+    if (!weather || !materialsSelected.length) return null;
+
+    const temp = Math.round(weather.main.temp);
+    const userIdealTemp = parseInt(temperature) || 20;
+    const isHot = temp > userIdealTemp;
+
+    const selectedMaterials = materialsSelected.map((m) => m.value);
+
+    const filteredSuggestions = {
+      tops: [],
+      bottoms: [],
+    };
+
+    selectedMaterials.forEach((material) => {
+      const categoryData = DEMO_SUGGESTIONS[isHot ? "hot" : "cold"][material];
+      if (categoryData) {
+        if (categoryData.tops) {
+          filteredSuggestions.tops.push(...categoryData.tops);
+        }
+        if (categoryData.bottoms) {
+          filteredSuggestions.bottoms.push(...categoryData.bottoms);
+        }
+      }
+    });
+
+    if (filteredSuggestions.tops.length === 0 && filteredSuggestions.bottoms.length === 0) {
+      return (
+        <div className="suggestions-container">
+          <h3>No specific recommendations found for your selected materials</h3>
+          <p>Try selecting different materials or adjusting your preferences</p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="clothing-suggestions">
+        {filteredSuggestions.tops.length > 0 && (
+          <div className="suggestion-section">
+            <h4>Tops</h4>
+            {filteredSuggestions.tops.map((item, index) => (
+              <div key={index} className="suggestion-item">
+                <h5>{item.name}</h5>
+                <p>
+                  <strong>Material:</strong> {item.material}
+                </p>
+                <p>
+                  <strong>Description:</strong> {item.description}
+                </p>
+                <p>
+                  <strong>Benefits:</strong> {item.benefits}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+        {filteredSuggestions.bottoms.length > 0 && (
+          <div className="suggestion-section">
+            <h4>Bottoms</h4>
+            {filteredSuggestions.bottoms.map((item, index) => (
+              <div key={index} className="suggestion-item">
+                <h5>{item.name}</h5>
+                <p>
+                  <strong>Material:</strong> {item.material}
+                </p>
+                <p>
+                  <strong>Description:</strong> {item.description}
+                </p>
+                <p>
+                  <strong>Benefits:</strong> {item.benefits}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -113,7 +321,6 @@ const WeatherPage = () => {
               <input ref={inputRef} className="input" placeholder="Enter your location..." />
 
               {loading && <div className="loading">Loading...</div>}
-
               {error && <div className="error">{error}</div>}
 
               {place && weather && (
@@ -148,6 +355,18 @@ const WeatherPage = () => {
               </form>
             </div>
           </div>
+
+          {showSuggestions && weather && (
+            <div className="card recommendations-card">
+              <div className="card-header">
+                <h2 className="card-title">Recommended Outfits</h2>
+                <p className="card-subtitle">
+                  For {Math.round(weather.main.temp)}°C based on your ideal temperature of {temperature}°C
+                </p>
+              </div>
+              <div className="card-body">{getClothingSuggestions()}</div>
+            </div>
+          )}
         </div>
       </div>
     </div>
