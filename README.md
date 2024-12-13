@@ -10,9 +10,13 @@ For more details, view our full project proposal [here](https://docs.google.com/
 
 ## Developers
 Janine Leong - Designed and developed the user preferences page, worked both frontend & backend.
+
 Warren Jodjana - Developed the outfit recommendation system, worked both frontend & backend.
+
 Grace Ren - Designed and developed the overall styling of the website, worked both frontend & backend.
+
 Eunice Choi - Developed user login and authentication, worked both frontend & backend.
 
 ## Installation 
 Please follow the steps below to run the website.
+
