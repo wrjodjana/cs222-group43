@@ -20,7 +20,7 @@ Eunice Choi - Developed user login and authentication, worked both frontend & ba
 ## Installation 
 Please follow the steps below to run the website.
 
-Run these commands in your terminal.
+Run these commands in your project directory on your terminal:
 
 `npm install`
 
