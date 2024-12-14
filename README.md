@@ -20,3 +20,12 @@ Eunice Choi - Developed user login and authentication, worked both frontend & ba
 ## Installation 
 Please follow the steps below to run the website.
 
+Run these commands in your terminal.
+
+`npm install`
+
+Depending on your machine, you may also need to run 
+
+`npm install react-bootstrap bootstrap`.
+
+`npm start`
